@@ -86,6 +86,10 @@
       with_indexed_items:
         - "{{ control_output.instances }}"
       register: associate_iam_instance_profile
+      failed_when: '"There is an existing association for instance" not in associate_iam_instance_profile.stderr'
+      until: associate_iam_instance_profile is not failed
+      retries: 12
+      delay: 10
       when: control_output.instance_ids is not none
 
     - name: Check associate_iam_instance_profile
