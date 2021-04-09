@@ -18,7 +18,7 @@
             ],
             "Condition": {
                 "StringEquals": {
-                    "ec2:InstanceProfile": "arn:aws:iam::{{ aws_account }}:instance-profile/VPCLockDown_{{ ec2_name_prefix }}"
+                    "ec2:InstanceProfile": "arn:aws:iam::{{ aws_account }}:instance-profile/VPCLockDown_{{ ec2_name_prefix }}_student{{ loop_idx + 1 }}"
                 }
             }
         },
@@ -36,7 +36,7 @@
             ],
             "Condition": {
                 "StringEquals": {
-                    "ec2:InstanceProfile": "arn:aws:iam::{{ aws_account }}:instance-profile/VPCLockDown_{{ ec2_name_prefix }}"
+                    "ec2:InstanceProfile": "arn:aws:iam::{{ aws_account }}:instance-profile/VPCLockDown_{{ ec2_name_prefix }}_student{{ loop_idx + 1 }}"
                 }
             }
         },
@@ -88,6 +88,22 @@
             ]
         },
         {
+            "Sid": "Route53Actions",
+            "Effect": "Allow",
+            "Action": [
+                "route53:ChangeResourceRecordSets",
+                "route53:GetChange"
+            ],
+            "Resource": [
+                "arn:aws:route53:::hostedzone/*"
+            ],
+            "Condition": {
+                "StringEquals": {
+                    "ec2:InstanceProfile": "arn:aws:iam::{{ aws_account }}:instance-profile/VPCLockDown_{{ ec2_name_prefix }}_student{{ loop_idx + 1 }}"
+                }
+            }
+        },
+        {
             "Sid": "NonResourceBasedReadOnlyPermissions",
             "Effect": "Allow",
             "Action": [
@@ -101,7 +117,9 @@
                 "ec2:DescribeSubnets",
                 "ec2:DescribeSnapshots",
                 "iam:ListInstanceProfiles",
-                "ec2:CreateVolume"
+                "ec2:CreateVolume",
+                "route53:ListHostedZones",
+                "route53:ListResourceRecordSets"
             ],
             "Resource": "*"
         },
@@ -109,10 +127,10 @@
             "Sid": "IAMPassroleToInstance",
             "Effect": "Allow",
             "Action": "iam:PassRole",
-            "Resource": "arn:aws:iam::{{ aws_account }}:role/VPCLockDown_{{ ec2_name_prefix }}"
+            "Resource": "arn:aws:iam::{{ aws_account }}:role/VPCLockDown_{{ ec2_name_prefix }}_student{{ loop_idx + 1 }}"
         },
         {
-            "Sid": "VisualEditor2",
+            "Sid": "AttachandDetachVolume",
             "Effect": "Allow",
             "Action": [
                 "ec2:DetachVolume",
