@@ -49,14 +49,16 @@
   block:
     - name: Create VPC Lock Down role
       iam_role:
-        name: "VPCLockDown_{{ ec2_name_prefix }}"
+        name: "VPCLockDown_{{ ec2_name_prefix }}_student{{ item }}"
         assume_role_policy_document: "{{ lookup('file','AssumeRole_policy.json') }}"
         create_instance_profile: true
         description: VPC Lockdown role for "{{ ec2_name_prefix }}" workshop
+      loop: "{{ range(1, student_total + 1)|list }}"
 
-    - name: set fact for VPC Lock Down role used for all automated nodes
-      set_fact:
-        node_ec2_instance_role_name: "VPCLockDown_{{ ec2_name_prefix }}"
+    #- name: set fact for VPC Lock Down role used for all automated nodes
+    # instances_rhel.yml, instances_centos_6.yml, instances_centos_7.yml, etc
+    #  set_fact:
+    #    node_ec2_instance_role_name: "VPCLockDown_{{ ec2_name_prefix }}"
 
     - name: Create control node instance role
       iam_role:
