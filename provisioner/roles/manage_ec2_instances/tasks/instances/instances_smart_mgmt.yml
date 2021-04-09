@@ -7,6 +7,7 @@
     instance_type: "{{ ec2_info['satellite'].size }}"
     image: "{{ sat_ami.image_id }}"
     region: "{{ ec2_region }}"
+    ebs_optimized: "true"
     exact_count: "{{ student_total }}"
     count_tag:
       Workshop_satellite: "{{ ec2_name_prefix }}-satellite"
