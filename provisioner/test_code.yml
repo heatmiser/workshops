@@ -1,0 +1,42 @@
+---
+- name: Test Ansible Code
+  hosts: localhost
+  connection: local
+  become: false
+  gather_facts: true
+  vars:
+    control_output:
+      instances:
+          - id: i-047667be65aff52bb
+          - id: i-08ba19249390234e9
+  tasks:
+    - name: Verify control node instance role exists before continuing
+      iam_role_info:
+        name: "ControlNode_{{ ec2_name_prefix }}_student{{ item }}"
+      loop: "{{ range(1, student_total + 1)|list }}"
+      register: iam_role_info_results
+      until: iam_role_info_results is not failed
+      retries: 12
+      delay: 10
+
+    #- name: Print iam_role_info_results
+    #  debug:
+    #    msg: "{{ iam_role_info_results }}"
+
+    - name: Associate IAM instance profile with control node
+      command: >
+        aws ec2 associate-iam-instance-profile
+          --iam-instance-profile Name=ControlNode_{{ ec2_name_prefix }}_student{{ item.0 + 1 }}
+          --instance-id {{ item.1.id }}
+          --region {{ ec2_region }}
+      with_indexed_items:
+        - "{{ control_output.instances }}"
+      register: associate_iam_instance_profile
+      failed_when: '"There is an existing association for instance" not in associate_iam_instance_profile.stderr'
+      until: associate_iam_instance_profile is not failed
+      retries: 12
+      delay: 10
+
+    - name: Print associate_iam_instance_profile
+      debug:
+        msg: "{{ associate_iam_instance_profile }}"  
