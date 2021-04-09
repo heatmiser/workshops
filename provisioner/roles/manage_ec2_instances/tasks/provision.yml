@@ -33,6 +33,8 @@
   loop: "{{ range(1, control_nodes|default(1) + 1 ) | list }}"
   loop_control:
     loop_var: sequence
+    # This is the direction where things need to go...
+    # index_var: sequence_idx
 
 ## create instance that will host login page
 - name: configure attendance host
