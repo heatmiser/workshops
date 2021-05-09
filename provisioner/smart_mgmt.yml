@@ -137,6 +137,9 @@
         inventory: Workshop Inventory
         credentials:
           - Satellite Credential
+        extra_vars:
+          refresh_satellite_manifest: no
+        ask_variables_on_launch: yes
       - name: SETUP / Tower
         project: Automated Management
         playbook: setup_tower.yml
