@@ -85,7 +85,7 @@
             FOREMAN_USER: "{% raw %}{{ '{{username}}' }}{% endraw %}"
             FOREMAN_PASSWORD: "{% raw %}{{ '{{password}}' }}{% endraw %}"
             FOREMAN_VALIDATE_CERTS: 'false'
-      - name: GitHub Personal Access Token
+      - name: GitHub_Personal_Access_Token
         description: Credential for GitHub repo operations automation
         kind: cloud
         inputs:
@@ -143,12 +143,6 @@
         inventory: Workshop Inventory
         credentials:
           - Tower Credential
-      - name: SETUP / Update project repo
-        project: Automated Management
-        playbook: git_project_update.yml
-        inventory: Workshop Inventory
-        credentials:
-          - Workshop Credential
   tasks:
     - name: Deploy tower-infra workloads
       include_role:
