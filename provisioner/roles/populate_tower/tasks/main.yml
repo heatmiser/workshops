@@ -40,7 +40,7 @@
     organization: Default
     tower_username: admin
     tower_password: "{{ admin_password }}"
-    tower_host: "{{ ansible_host }}"
+    tower_host: "{{ username }}.{{ ec2_name_prefix }}.{{ workshop_dns_zone }}"
     tower_verify_ssl: false
 #### END OF CREDENTIAL
 
