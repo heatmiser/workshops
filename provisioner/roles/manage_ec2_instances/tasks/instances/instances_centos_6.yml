@@ -47,15 +47,15 @@
   when: node6_output.instance_ids is not none
 
 - name: Associate IAM instance profile with node6
-  command: >
-    aws ec2 associate-iam-instance-profile
-      --iam-instance-profile Name=VPCLockDown_{{ ec2_name_prefix }}_student{{ item.0 + 1 }}
-      --instance-id {{ item.1.id }}
-      --region {{ ec2_region }}
+  community.aws.ec2_instance:
+    instance_ids: "{{ item.1.id }}"
+    region: "{{ ec2_region }}"
+    instance_role: "VPCLockDown_{{ ec2_name_prefix }}_student{{ item.0 + 1 }}"
+    state: running
+    wait: true
   with_indexed_items:
     - "{{ node6_output.instances }}"
   register: associate_iam_instance_profile
-  failed_when: '"There is an existing association for instance" not in associate_iam_instance_profile.stderr'
   until: associate_iam_instance_profile is not failed
   retries: 12
   delay: 10
@@ -112,15 +112,15 @@
   when: node7_output.instance_ids is not none
 
 - name: Associate IAM instance profile with node7
-  command: >
-    aws ec2 associate-iam-instance-profile
-      --iam-instance-profile Name=VPCLockDown_{{ ec2_name_prefix }}_student{{ item.0 + 1 }}
-      --instance-id {{ item.1.id }}
-      --region {{ ec2_region }}
+  community.aws.ec2_instance:
+    instance_ids: "{{ item.1.id }}"
+    region: "{{ ec2_region }}"
+    instance_role: "VPCLockDown_{{ ec2_name_prefix }}_student{{ item.0 + 1 }}"
+    state: running
+    wait: true
   with_indexed_items:
     - "{{ node7_output.instances }}"
   register: associate_iam_instance_profile
-  failed_when: '"There is an existing association for instance" not in associate_iam_instance_profile.stderr'
   until: associate_iam_instance_profile is not failed
   retries: 12
   delay: 10
