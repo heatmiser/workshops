@@ -84,7 +84,7 @@
       community.aws.ec2_instance:
         instance_ids: "{{ item.1.id }}"
         region: "{{ ec2_region }}"
-        instance_profile_name: "ControlNode_{{ ec2_name_prefix }}_student{{ item.0 + 1 }}"
+        instance_role: "ControlNode_{{ ec2_name_prefix }}_student{{ item.0 + 1 }}"
         state: running
         wait: true
       with_indexed_items:
