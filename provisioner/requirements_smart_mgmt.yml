@@ -1,0 +1,6 @@
+---
+collections:
+  # Install a collection from Ansible Galaxy.
+  - name: community.aws
+    version: 1.5.0
+    source: https://galaxy.ansible.com
