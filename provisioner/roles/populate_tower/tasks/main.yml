@@ -53,7 +53,7 @@
     organization: Default
     tower_username: admin
     tower_password: "{{ admin_password }}"
-    tower_host: "{{ansible_host}}"
+    tower_host: "{{ ansible_host }}"
     tower_verify_ssl: false
 #### END OF CREDENTIAL
 
