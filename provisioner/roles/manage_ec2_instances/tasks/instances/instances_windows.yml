@@ -124,3 +124,38 @@
   when:
     - doubleup|bool
     - instance2_output.instance_ids is not none
+
+- name: Associate IAM instance profile with instance 1
+  community.aws.ec2_instance:
+    instance_ids: "{{ item.1.id }}"
+    region: "{{ ec2_region }}"
+    instance_role: "VPCLockDown_{{ ec2_name_prefix }}_student{{ item.0 + 1 }}"
+    state: running
+    wait: true
+  with_indexed_items:
+    - "{{ instance1_output.instances }}"
+  register: associate_iam_instance_profile
+  until: associate_iam_instance_profile is not failed
+  retries: 12
+  delay: 10
+  when:
+    - instance1_output.instance_ids is not none
+    - tower_node_aws_api_access|default(false)|bool
+
+- name: Associate IAM instance profile with instance 2
+  community.aws.ec2_instance:
+    instance_ids: "{{ item.1.id }}"
+    region: "{{ ec2_region }}"
+    instance_role: "VPCLockDown_{{ ec2_name_prefix }}_student{{ item.0 + 1 }}"
+    state: running
+    wait: true
+  with_indexed_items:
+    - "{{ instance2_output.instances }}"
+  register: associate_iam_instance_profile
+  until: associate_iam_instance_profile is not failed
+  retries: 12
+  delay: 10
+  when:
+    - doubleup|bool
+    - instance2_output.instance_ids is not none
+    - tower_node_aws_api_access|default(false)|bool
