@@ -158,7 +158,8 @@ ec2_info:
     filter: 'Windows_Server-2016-English-Full-Base*'
     size: t3.medium
   skylight_windows_instance:
-    filter: 'Windows_Server-2019-English-Core-Base*'
+    #filter: 'Windows_Server-2019-English-Core-Base*'
+    filter: 'Windows_Server-2019-English-Full-Base*'
     size: t3.medium
   skylight_rhel7_gitlab:
     filter: 'RHEL-7.6_HVM_GA*x86_64*'
@@ -179,7 +180,8 @@ ec2_info:
     filter: 'RHEL-8*HVM-*Hourly*'
     username: ec2-user
   satellite:
-    owners: 551178754270
+    #owners: 551178754270
+    owners: 466755549065
     filter: Satellite*
     username: ec2-user
     os_type: linux
