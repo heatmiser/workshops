@@ -1,5 +1,5 @@
 ---
-- name: configure ripu workshop for webservers
+- name: Configure ripu workshop for webservers
   hosts: lab_hosts
   become: true
   gather_facts: false
@@ -8,7 +8,103 @@
       include_role:
         name: ../../roles/webservers
 
-- name: Configure controller for ripu
+- name: Update controller and cockpit configuration
+  hosts: control_nodes
+  become: true
+  gather_facts: true
+  tasks:
+    - name: check for updates
+      yum:
+        name: '*'
+        state: latest
+        exclude: kernel*
+
+    - name: Install cockpit console
+      ansible.builtin.package:
+        name: 
+          - cockpit
+          - cockpit-system
+        state: present
+
+    - name: Setup cockpit/machines.d/99-webui.json file per student
+      ansible.builtin.copy:
+        src: "{{ playbook_dir }}/../{{ ec2_name_prefix }}/{{ student }}-99-webui.json"
+        dest: "/etc/cockpit/machines.d/99-webui.json"
+
+    - name: Copy controller key to cockpit 
+      ansible.builtin.copy:
+        src: "/etc/tower/tower.key"
+        dest: "/etc/cockpit/ws-certs.d/00-signed.key"
+        remote_src: true
+
+    - name: Copy controller cert to cockpit 
+      ansible.builtin.copy:
+        src: "/etc/tower/tower.cert"
+        dest: "/etc/cockpit/ws-certs.d/00-signed.cert"
+        remote_src: true
+
+    - name: Enable and start cockpit console service
+      ansible.builtin.service:
+        name: cockpit.socket
+        enabled: true
+        state: started
+
+    - name: Grab ec2_instance_info for node1
+      amazon.aws.ec2_instance_info:
+        region: "{{ ec2_region }}"
+        filters:
+          instance-state-name: running
+          "tag:Workshop_node1": "{{ec2_name_prefix}}-node1"
+      delegate_to: localhost
+      register: node1_node_facts
+
+    - name: Grab ec2_instance_info for node2
+      amazon.aws.ec2_instance_info:
+        region: "{{ ec2_region }}"
+        filters:
+          instance-state-name: running
+          "tag:Workshop_node2": "{{ec2_name_prefix}}-node2"
+      delegate_to: localhost
+      register: node2_node_facts
+
+    - name: Grab ec2_instance_info for node3
+      amazon.aws.ec2_instance_info:
+        region: "{{ ec2_region }}"
+        filters:
+          instance-state-name: running
+          "tag:Workshop_node3": "{{ec2_name_prefix}}-node3"
+      delegate_to: localhost
+      register: node3_node_facts
+
+    - name: Grab ec2_instance_info for node4
+      amazon.aws.ec2_instance_info:
+        region: "{{ ec2_region }}"
+        filters:
+          instance-state-name: running
+          "tag:Workshop_node4": "{{ec2_name_prefix}}-node4"
+      delegate_to: localhost
+      register: node4_node_facts
+
+    - name: Populate ssh host keys to known_hosts
+      become: yes
+      become_user: student
+      become_method: su
+      become_exe: sudo su -
+      shell: >
+        ssh-keyscan -tecdsa-sha2-nistp256 {{ item.tags.short_name }} >> ~/.ssh/known_hosts
+      #Circle back to lineinfile...  
+      #lineinfile:
+      #  dest: /home/student/.ssh/known_hosts
+      #  create: yes
+      # state: present
+      #  line: "{{ lookup('pipe', 'ssh-keyscan -tecdsa-sha2-nistp256 ' + item.tags.short_name) }}"
+      with_items:
+        - "{{ node1_node_facts.instances }}"
+        - "{{ node2_node_facts.instances }}"
+        - "{{ node3_node_facts.instances }}"
+        - "{{ node4_node_facts.instances }}"
+
+- name: Initial IaC controller configuration for ripu
   hosts: control_nodes
   gather_facts: false
   vars:
@@ -110,97 +206,6 @@
   become: true
   gather_facts: true
   tasks:
-    - name: check for updates
-      yum:
-        name: '*'
-        state: latest
-        exclude: kernel*
-
-    - name: Install cockpit console
-      ansible.builtin.package:
-        name: 
-          - cockpit
-          - cockpit-system
-        state: present
-
-    - name: Setup cockpit/machines.d/99-webui.json file per student
-      ansible.builtin.copy:
-        src: "{{ playbook_dir }}/../{{ ec2_name_prefix }}/{{ student }}-99-webui.json"
-        dest: "/etc/cockpit/machines.d/99-webui.json"
-
-    - name: Copy controller key to cockpit 
-      ansible.builtin.copy:
-        src: "/etc/tower/tower.key"
-        dest: "/etc/cockpit/ws-certs.d/00-signed.key"
-        remote_src: true
-
-    - name: Copy controller cert to cockpit 
-      ansible.builtin.copy:
-        src: "/etc/tower/tower.cert"
-        dest: "/etc/cockpit/ws-certs.d/00-signed.cert"
-        remote_src: true
-
-    - name: Enable and start cockpit console service
-      ansible.builtin.service:
-        name: cockpit.socket
-        enabled: true
-        state: started
-
-    - name: Grab ec2_instance_info for node1
-      amazon.aws.ec2_instance_info:
-        region: "{{ ec2_region }}"
-        filters:
-          instance-state-name: running
-          "tag:Workshop_node1": "{{ec2_name_prefix}}-node1"
-      delegate_to: localhost
-      register: node1_node_facts
-
-    - name: Grab ec2_instance_info for node2
-      amazon.aws.ec2_instance_info:
-        region: "{{ ec2_region }}"
-        filters:
-          instance-state-name: running
-          "tag:Workshop_node2": "{{ec2_name_prefix}}-node2"
-      delegate_to: localhost
-      register: node2_node_facts
-
-    - name: Grab ec2_instance_info for node3
-      amazon.aws.ec2_instance_info:
-        region: "{{ ec2_region }}"
-        filters:
-          instance-state-name: running
-          "tag:Workshop_node3": "{{ec2_name_prefix}}-node3"
-      delegate_to: localhost
-      register: node3_node_facts
-
-    - name: Grab ec2_instance_info for node4
-      amazon.aws.ec2_instance_info:
-        region: "{{ ec2_region }}"
-        filters:
-          instance-state-name: running
-          "tag:Workshop_node4": "{{ec2_name_prefix}}-node4"
-      delegate_to: localhost
-      register: node4_node_facts
-
-    - name: Populate ssh host keys to known_hosts
-      become: yes
-      become_user: student
-      become_method: su
-      become_exe: sudo su -
-      shell: >
-        ssh-keyscan -tecdsa-sha2-nistp256 {{ item.tags.short_name }} >> ~/.ssh/known_hosts
-      #Circle back to lineinfile...  
-      #lineinfile:
-      #  dest: /home/student/.ssh/known_hosts
-      #  create: yes
-      # state: present
-      #  line: "{{ lookup('pipe', 'ssh-keyscan -tecdsa-sha2-nistp256 ' + item.tags.short_name) }}"
-      with_items:
-        - "{{ node1_node_facts.instances }}"
-        - "{{ node2_node_facts.instances }}"
-        - "{{ node3_node_facts.instances }}"
-        - "{{ node4_node_facts.instances }}"
-
     - when: provision_mode == "workshop"
       block:
         - name: Run SETUP / Controller job template
