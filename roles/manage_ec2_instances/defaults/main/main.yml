@@ -27,7 +27,10 @@ rhel: "rhel8"
 ec2_info:
   private_automation_hub:
     owners: 309956199498
-    size: m4.xlarge
+    size:
+      - m5a.xlarge
+      - m5.xlarge
+      - m4.xlarge
     os_type: linux
     disk_volume_type: gp3
     disk_space: 40
@@ -37,7 +40,9 @@ ec2_info:
     filter: 'RHEL-8*HVM-*Hourly*'
     username: ec2-user
   juniper:
-    size: c5.xlarge
+    size:
+      - c5a.xlarge
+      - c5.xlarge
     ami: "{{ juniper_ami | default(omit) }}"
     os: junos
     username: ec2-user
@@ -50,7 +55,10 @@ ec2_info:
           volume_size: 40
           delete_on_termination: true
   cisco:
-    size: t2.medium
+    size:
+      - t3a.medium
+      - t3.medium
+      - t2.medium
     ami: "{{ cisco_ami | default(omit) }}"
     os: ios
     username: ec2-user
@@ -63,7 +71,9 @@ ec2_info:
           volume_size: 8
           delete_on_termination: true
   arista:
-    size: c5.xlarge
+    size:
+      - c5a.xlarge
+      - c5.xlarge
     ami: "{{ arista_ami | default(omit) }}"
     os: eos
     username: ec2-user
@@ -79,20 +89,28 @@ ec2_info:
     owners: 679593333241
     filter: 'Check Point CloudGuard IaaS BYOL*R80.40*'
     architecture: x86_64
-    size: m5.xlarge
+    size:
+      - m5a.xlarge
+      - m5.xlarge
+      - m4.xlarge
     ami: "{{ checkpoint_mgmt_ami| default(omit) }}"
     username: admin
   checkpoint_gw:
     owners: 679593333241
     filter: 'Check Point CloudGuard IaaS GW*BYOL*R80.40*'
     architecture: x86_64
-    size: c5.large
+    size:
+      - c5a.large
+      - c5.xlarge
     ami: "{{ checkpoint_gw_ami| default(omit) }}"
     username: admin
   windows_ws:
     owners: 679593333241
     filter: 'Windows_Server-2016-English-Full-Base*'
-    size: m5.xlarge
+    size:
+      - m5a.xlarge
+      - m5.xlarge
+      - m4.xlarge
     ami: "{{ windows_ws_ami| default(omit) }}"
     username: Administrator
     disk_volume_type: gp3
@@ -104,6 +122,7 @@ ec2_info:
     owners: 309956199498
     size:
       - m5a.xlarge
+      - m5.xlarge
       - m4.xlarge
     os_type: linux
     disk_volume_type: gp3
@@ -117,6 +136,7 @@ ec2_info:
     owners: 309956199498
     size:
       - m5a.xlarge
+      - m5.xlarge
       - m4.xlarge
     os_type: linux
     disk_volume_type: gp3
@@ -131,6 +151,7 @@ ec2_info:
     size:
       - t3a.micro
       - t3.micro
+      - t3.small
     os_type: linux
     disk_volume_type: gp3
     disk_space: 10
@@ -144,6 +165,7 @@ ec2_info:
     size:
       - t3a.micro
       - t3.micro
+      - t3.small
     os_type: linux
     disk_volume_type: gp3
     disk_space: 10
@@ -156,6 +178,7 @@ ec2_info:
     owners: 309956199498
     size:
       - t3a.medium
+      - t3.medium
       - t2.medium
     os_type: linux
     disk_volume_type: gp3
@@ -168,7 +191,10 @@ ec2_info:
     python_interpreter: '/usr/bin/python'
   rhel68:
     owners: 309956199498
-    size: t2.medium
+    size:
+      - t3a.medium
+      - t3.medium
+      - t2.medium
     os_type: linux
     disk_volume_type: gp3
     disk_space: 10
@@ -182,6 +208,7 @@ ec2_info:
     owners: 125523088429
     size:
       - t3a.medium
+      - t3.medium
       - t2.medium
     os_type: linux
     disk_volume_type: gp3
@@ -196,6 +223,7 @@ ec2_info:
     owners: 125523088429
     size:
       - t3a.medium
+      - t3.medium
       - t2.medium
     os_type: linux
     disk_volume_type: gp3
@@ -222,7 +250,10 @@ ec2_info:
     username: admin
   splunk_enterprise:
     owners: 309956199498
-    size: c4.4xlarge
+    size:
+      - c5a.4xlarge
+      - c5.4xlarge
+      - c4.4xlarge
     os_type: linux
     disk_volume_type: gp3
     disk_space: 200
@@ -245,7 +276,10 @@ ec2_info:
     username: ec2-user
   qradar:
     owners: 721066863947
-    size: t2.2xlarge
+    size:
+      - t3a.2xlarge
+      - t3.2xlarge
+      - t2.2xlarge
     os_type: linux
     disk_volume_type: gp3
     disk_space: 300
@@ -257,22 +291,34 @@ ec2_info:
     python_interpreter: '/usr/bin/python'
   skylight_windows_ws:
     filter: 'Windows_Server-2016-English-Full-Base*'
-    size: t3.medium
+    size:
+      - t3a.medium
+      - t3.medium
+      - t2.medium
   skylight_windows_instance:
     filter: 'Windows_Server-2019-English-Core-Base*'
-    size: t3.medium
+    size:
+      - t3a.medium
+      - t3.medium
+      - t2.medium
     disk_volume_type: gp3
     disk_space: 30
     disk_iops: 3000
     disk_throughput: 125
   skylight_rhel7_gitlab:
     filter: 'RHEL-7.6_HVM_GA*x86_64*'
-    size: t2.xlarge
+    size:
+      - t3a.xlarge
+      - t3.xlarge
+      - t2.xlarge
     username: ec2-user
   skylight_rhel8_gitlab:
     owners: 309956199498
     filter: 'RHEL-8*HVM-*Hourly*'
-    size: t2.xlarge
+    size:
+      - t3a.xlarge
+      - t3.xlarge
+      - t2.xlarge
     username: ec2-user
     architecture: x86_64
     disk_volume_type: gp3
@@ -284,6 +330,7 @@ ec2_info:
     size:
       - t3a.micro
       - t3.micro
+      - t2.micro
     os_type: linux
     disk_volume_type: gp3
     disk_space: 10
@@ -308,7 +355,10 @@ ec2_info:
       - r5b.xlarge
   middleware:
     owners: 309956199498
-    size: t2.xlarge
+    size:
+      - t3a.xlarge
+      - t3.xlarge
+      - t2.xlarge
     os_type: linux
     disk_space: 20
     architecture: x86_64
@@ -339,3 +389,4 @@ pre_build_hub_ami:
   us-east-2: ami-08241f088dd7ba4c0
   us-west-1: ami-0f382a9cddf149608
   us-west-2: ami-07bf564f45ff71e62
+...
