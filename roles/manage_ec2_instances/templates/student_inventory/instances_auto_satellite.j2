@@ -53,6 +53,23 @@ ansible_port={{ ssh_port }}
 {% endif -%}
 {% endfor -%}
 {% endif %}
+{% if oel7 is defined -%}
+{% for vm in node4_node_facts.instances -%}
+{% if 'student' + item == vm.tags.Student -%}
+{{ vm.tags.short_name }}.example.com ansible_host={{ vm.private_ip_address }}
+{% endif -%}
+{% endfor -%}
+{% for vm in node5_node_facts.instances -%}
+{% if 'student' + item == vm.tags.Student -%}
+{{ vm.tags.short_name }}.example.com ansible_host={{ vm.private_ip_address }}
+{% endif -%}
+{% endfor -%}
+{% for vm in node6_node_facts.instances -%}
+{% if 'student' + item == vm.tags.Student -%}
+{{ vm.tags.short_name }}.example.com ansible_host={{ vm.private_ip_address }}
+{% endif -%}
+{% endfor -%}
+{% endif %}
 
 [rhel:children]
 {{ rhel }}
@@ -126,6 +143,36 @@ centos7
 {% endif %}
 [centos:vars]
 ansible_user=centos
+
+{% endif %}
+
+{% if oel7 is defined -%}
+[oel:children]
+{% if oel7 is defined -%}
+oel7
+{% endif %}
+
+{% if oel7 is defined -%}
+[oel7]
+{% for vm in node4_node_facts.instances -%}
+{% if 'student' + item == vm.tags.Student -%}
+{{ vm.tags.short_name }}.example.com
+{% endif -%}
+{% endfor -%}
+{% for vm in node5_node_facts.instances -%}
+{% if 'student' + item == vm.tags.Student -%}
+{{ vm.tags.short_name }}.example.com
+{% endif -%}
+{% endfor %}
+{% for vm in node6_node_facts.instances -%}
+{% if 'student' + item == vm.tags.Student -%}
+{{ vm.tags.short_name }}.example.com
+{% endif -%}
+{% endfor %}
+
+{% endif %}
+[oel:vars]
+ansible_user=ec2-user
 
 {% endif %}
 [control]

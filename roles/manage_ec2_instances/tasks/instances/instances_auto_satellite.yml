@@ -59,4 +59,9 @@
 - name: provision aws centos 7 instances
   include_tasks: instances_centos_7.yml
   when: (centos7 is defined) and (centos7 is not none)
+
+## oel 7 nodes for potential convert2rhel scenarios
+- name: provision aws oel 7 instances
+  include_tasks: instances_oel_7.yml
+  when: (oel7 is defined) and (oel7 is not none)
 ...
