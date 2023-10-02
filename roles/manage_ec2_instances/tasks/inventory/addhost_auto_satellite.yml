@@ -11,6 +11,10 @@
   include_tasks: addhost_centos_7.yml
   when: (centos7 is defined) and (centos7 is not none)
 
+- name: add oel 7 hosts to inventory
+  include_tasks: addhost_oel_7.yml
+  when: (oel7 is defined) and (oel7 is not none)
+
 - name: grab facts for satellite node
   amazon.aws.ec2_instance_info:
     region: "{{ ec2_region }}"
