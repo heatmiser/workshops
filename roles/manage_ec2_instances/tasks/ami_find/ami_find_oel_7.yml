@@ -2,13 +2,13 @@
 - name: find ami for eol 7 node
   ec2_ami_info:
     region: "{{ ec2_region }}"
-    owners: "{{ ec2_info[eol7].owners }}"
+    owners: "{{ ec2_info[oel7].owners }}"
     filters:
-      name: "{{ ec2_info[eol7].filter }}"
-      architecture: "{{ ec2_info[eol7].architecture }}"
+      name: "{{ ec2_info[oel7].filter }}"
+      architecture: "{{ ec2_info[oel7].architecture }}"
   register: amis
 
 - name: save ami for eol 7 node
   set_fact:
-    node_ami_eol7: >
+    node_ami_oel7: >
       {{ amis.images | selectattr('name', 'defined') | sort(attribute='creation_date') | last }}
