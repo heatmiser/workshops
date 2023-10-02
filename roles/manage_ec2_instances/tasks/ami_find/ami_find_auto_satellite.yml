@@ -12,7 +12,7 @@
   when: (centos7 is defined) and (centos7 is not none)
 
 - name: find ami for oel 7
-  include_tasks: ami_find_oel7_7.yml
+  include_tasks: ami_find_oel_7.yml
   when: (oel7 is defined) and (oel7 is not none)
 
 - name: find ami for satellite
