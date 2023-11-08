@@ -16,6 +16,8 @@
     LANG: en_US.UTF-8
     LC_ALL: en_US.UTF-8
     TERM: linux
+  vars:
+    refresh_timeout: 14400
   gather_facts: false
   tasks:
     - name: configure satellite admin password
@@ -126,13 +128,37 @@
     - name: set original gold image hostname via hostnamectl
       command: >-
         hostnamectl set-hostname satellite.example.com
-    - name: change satellite hostname
+
+    - name: Create tempfile for foreman-installer satellite.log asynchronous tail
+      tempfile:
+        state: file
+      register: foreman_installer_satlog_tempfile
+
+    - name: Asynchronous tail tempfile 
+      shell: tail -n 0 -f /var/log/foreman-installer/satellite.log > {{ foreman_installer_satlog_tempfile.path }}
+      async: "{{ refresh_timeout }}"
+      poll: 0
+
+    - name: Change satellite hostname
       shell: >-
         satellite-change-hostname {{ student }}-sat.{{ ec2_name_prefix|lower }}.{{ workshop_dns_zone }}
         -u admin -p {{ admin_password }} --skip-dns --assumeyes
-      register: satellite_change_hostname
-      #until: "'Success!' in satellite_change_hostname.stdout"
-      failed_when: '"Success!" not in satellite_change_hostname.stdout'
+      async: "{{ refresh_timeout }}"
+      poll: 0
+
+    - name: >
+        Watch the tempfile until Success result appears before continuing...
+      wait_for:
+        path: "{{ foreman_installer_satlog_tempfile.path }}"
+        search_regex: "^.*All\ hooks\ in\ group\ post\ finished"
+        timeout: 1500
+        sleep: 20
+
+    - name: Remove tempfile
+      file:
+        path: "{{ foreman_installer_satlog_tempfile.path }}"
+        state: absent
+
     - name: update satellite with LetsEncrypt cert
       shell: >-
         satellite-installer --scenario satellite
