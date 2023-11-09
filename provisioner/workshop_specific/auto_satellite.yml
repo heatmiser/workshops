@@ -129,15 +129,10 @@
       command: >-
         hostnamectl set-hostname satellite.example.com
 
-    - name: Create tempfile for foreman-installer satellite.log asynchronous tail
-      tempfile:
-        state: file
-      register: foreman_installer_satlog_tempfile
-
-    - name: Asynchronous tail tempfile 
-      shell: tail -n 0 -f /var/log/foreman-installer/satellite.log > {{ foreman_installer_satlog_tempfile.path }}
-      async: "{{ refresh_timeout }}"
-      poll: 0
+    - name: Reset contents of /var/log/foreman-installer/satellite.log
+      ansible.builtin.copy:
+        content: '##### foreman-installer satellite log #####'
+        dest: /var/log/foreman-installer/satellite.log
 
     - name: Change satellite hostname
       shell: >-
@@ -149,15 +144,11 @@
     - name: >
         Watch the tempfile until Success result appears before continuing...
       wait_for:
-        path: "{{ foreman_installer_satlog_tempfile.path }}"
-        search_regex: "^.*All\ hooks\ in\ group\ post\ finished"
+        path: /var/log/foreman-installer/satellite.log
+        #search_regex: "^.*All\ hooks\ in\ group\ post\ finished"
+        search_regex: "^.*Exit\ with\ status\ code\:\ 2"
         timeout: 1500
         sleep: 20
-
-    - name: Remove tempfile
-      file:
-        path: "{{ foreman_installer_satlog_tempfile.path }}"
-        state: absent
 
     - name: update satellite with LetsEncrypt cert
       shell: >-
