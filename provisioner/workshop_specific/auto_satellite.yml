@@ -146,7 +146,7 @@
       wait_for:
         path: /var/log/foreman-installer/satellite.log
         #search_regex: "^.*All\ hooks\ in\ group\ post\ finished"
-        search_regex: "^.*Exit\ with\ status\ code\:\ 2"
+        search_regex: '^.*Exit\ with\ status\ code\:\ 2'
         timeout: 1500
         sleep: 20
 
