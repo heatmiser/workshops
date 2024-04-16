@@ -15,10 +15,11 @@ In this workshop, you will learn how to get the most from Red Hat Satellite in c
 
 ## Use Cases
 
-This workshop currently focuses on 4 main customer pain points:
+This workshop currently focuses on 5 main customer pain points:
 - Compliance (OpenSCAP Scanning) and Vulnerability Management
 - Patch/Package Management
-- CentOS to RHEL conversion
+- CentOS/OracleLinux to RHEL Conversion
+- RHEL In-Place-Upgrades
 - Vulnerability Management with Insights
 
 ## Presentations
@@ -34,32 +35,32 @@ Also have a look at our Ansible Best Practices Deck:
 
 The time required to do the workshops strongly depends on multiple factors: the number of participants, how familiar those are with Linux in general and how much discussions are done in between.
 
-Having said that, the exercises themselves should take roughly 4 hours. Each lab takes roughly 30-45 minutes. The accompanying presentation itself adds ~1 hour.
+Having said that, the exercises themselves should take roughly 4 to 5 hours. Each lab takes roughly 30-45 minutes. The accompanying presentation itself adds ~1 hour.
 
 ## Lab Diagram
 ![automated Satellite lab diagram](../../images/ansible_smart_mgmt_diagram.png#centreme)
 
 ### Environment
 
-| Role                    | Inventory name |
-| ------------------------| ---------------|
-| Automation controller   | ansible-1      |
-| Satellite Server        | satellite      |
-| Managed Host 1 - RHEL   | node1          |
-| Managed Host 2 - RHEL   | node2          |
-| Managed Host 3 - RHEL   | node3          |
-| Managed Host 4 - CentOS | node4          |
-| Managed Host 5 - CentOS | node5          |
-| Managed Host 6 - CentOS | node6          |
+| Role                                | Inventory name |
+| ------------------------------------| ---------------|
+| Automation controller               | ansible-1      |
+| Satellite Server                    | satellite      |
+| Managed Host 1 - RHEL               | node1          |
+| Managed Host 2 - RHEL               | node2          |
+| Managed Host 3 - RHEL               | node3          |
+| Managed Host 4 - CentOS/OracleLinux | node4          |
+| Managed Host 5 - CentOS/OracleLinux | node5          |
+| Managed Host 6 - CentOS/OracleLinux | node6          |
 
 
 
 ## Workshop Exercises
 
-* [Exercise 0: Configuring the Lab Environment](0-setup/README.md)
 * [Exercise 1: Compliance / Vulnerability Management](1-compliance/README.md)
 * [Exercise 2: Patch Management / OS](2-patching/README.md)
-* [Exercise 3: CentOS to RHEL conversion](3-convert2rhel/README.md)
-* [Exercise 4: Setup Insights](4-setupinsights/README.md)
-* [Exercise 5: Explore Insights](5-exploreinsights/README.md)
-* [Exercise 6: Remediate Vulnerability](6-remediatevulnerability/README.md)
+* [Exercise 3: CentOS to RHEL Conversion](3-convert2rhel/README.md)
+* [Exercise 4: RHEL In-Place-Upgrade](4-ripu/README.md)
+* [Exercise 5: Setup Insights](5-setupinsights/README.md)
+* [Exercise 6: Explore Insights](6-exploreinsights/README.md)
+* [Exercise 7: Remediate Vulnerability](7-remediatevulnerability/README.md)
