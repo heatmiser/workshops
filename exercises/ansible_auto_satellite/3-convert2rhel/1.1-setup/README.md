@@ -60,11 +60,11 @@ Terminal sessions provide access to the OS commands and utilities that will help
 
   ![Example of how to open a terminal session in VS Code](images/new_term.svg)
 
-- This terminal session will be running on the AAP control host `ansible-1`. Use the `cat /etc/hosts` command to see the hostnames of your hosts. Next, use the `ssh` command to login to one of your CentOS hosts. Finally, use the highlighted commands confirm the CentOS version and kernel version installed.
+- This terminal session will be running on the AAP control host `ansible-1`. Next, use the `ssh` command to login to one of your CentOS hosts. Finally, use the highlighted commands confirm the CentOS version and kernel version installed.
 
   For example:
 
-  ![Example ssh login to pet app host](images/ssh_login.svg)
+  ![Example ssh login to CentOS app host](images/ssh_login.png)
 
 - In the example above, the command `ssh node4` connects us to a new session on the node4 host. Then the commands `cat /etc/redhat-release` and `uname -r` are used to output the OS release information `CentOS Linux release 7.9.2009 (Core)` and kernel version `3.10.0-1160.102.1.el7.x86_64` from that host.
 
