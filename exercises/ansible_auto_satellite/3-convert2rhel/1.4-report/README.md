@@ -68,7 +68,7 @@ Now we are ready to use the Web Console to review the Convert2RHEL pre-conversio
 
 We are now here in the automation approach workflow:
 
-![Automation approach workflow diagram with review report step highlighted](images/ripu-workflow-hl-review.svg)
+![Automation approach workflow diagram with review report step highlighted](images/conversion-workflow-hl-review.svg)
 
 - Navigate to the RHEL Web Console remote host menu and click on the hostname of one of your CentOS 7 app servers. Remember as we learned in the previous step, you can confirm the CentOS version on the system overview page.
 
