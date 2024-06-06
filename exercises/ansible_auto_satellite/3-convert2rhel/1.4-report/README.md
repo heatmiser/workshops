@@ -52,6 +52,8 @@ For this workshop, we will be using the CentOS Web Console to access the Convert
 
   ![node4 running CentOS Linux 7 (Core)](images/centos7_os.png)
 
+- Additionally, if you'd like, take note/record the `Asset Tag` and `Machine ID` values. You can compare these values post coversion to prove the base hardware/virtualization instance is the same.
+
 - When you navigate to different hosts in the Web Console, look out for the "limited access mode" warning:
 
   ![Web console is running in limited access mode](images/limited_access.svg)
