@@ -75,9 +75,13 @@ Now let's make sure our application servers are actually converted to the next R
 
   ![command output showing RHEL7 is installed](images/rhel7_commands.png)
 
+- Additionally, we can check Satellite to review the content host status for these systems. Switch over to the browser instance for Satellite and in the left navigation pane, select `Hosts > Content Hosts`. Note that the OS for node4, node5 and node6 now show to be RHEL 7.9:
+
+  ![content hosts in Satellite](images/satellite_content_hosts.png)
+
 ## Conclusion
 
-In this exercise, we observed that the conversion playbook runs completed successfully. We then used the RHEL Web Console and the command line to verify the new RHEL versions were installed.
+In this exercise, we observed that the conversion playbook runs completed successfully. We then used the RHEL Web Console,the command line, as well as Satellite to verify the new RHEL versions were installed.
 
 Continue to the following exercise to verify the pet application is still functioning as expected after the CentOS conversions:
 
