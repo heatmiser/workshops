@@ -26,9 +26,9 @@
 
 ## Guide
 
-In the previous exercise, we launched the automation to start the RHEL in-place upgrades of our pet application servers. The first step of the upgrade workflow template is to create a snapshot for each RHEL instance being upgraded. If something goes wrong with an upgrade, the snapshot makes it possible to quickly undo the upgrade.
+In the previous exercise, we launched the automation to start the CentOS conversions of our three tier application servers. The first step of the conversion workflow template is to create a snapshot for each CentOS instance being converted. If something goes wrong with a conversion, the snapshot makes it possible to quickly undo the conversion.
 
-Automating snapshots can be one of the most difficult features of the RHEL in-place upgrade solution approach. In this exercise, we will explore some of the challenges that enterprises face and look at strategies for overcoming them.
+Automating snapshots can be one of the most difficult features of the CentOS in-place upgrade solution approach. In this exercise, we will explore some of the challenges that enterprises face and look at strategies for overcoming them.
 
 Let's start by defining exactly what we mean when we talk about snapshots.
 
@@ -42,7 +42,7 @@ But when an entire server is lost, using backups to recover is more difficult be
 
 Snapshots are different in that they do not backup and restore individual files. Instead, backups operate at a storage device level, instantly saving the contents of an entire logical volume or virtual disk. Unlike backups, snapshots do not make a copy of the data being backed up, but rather mark a point in time after which a copy of all modified data is copied going forward. For this reason, the underlying technique used for snapshots is often referred to as "copy-on-write" or COW.
 
-While COW snapshots are not a substitute for traditional full and incremental backups, they do offer a number of advantages. The most important advantage is that creating and rolling back snapshots happens almost instantaneously as compared to hours or longer for traditional backup and restore. It is this ability to quickly take an entire server back in time that makes snapshots ideal for reducing the risk of performing RHEL in-place upgrades.
+While COW snapshots are not a substitute for traditional full and incremental backups, they do offer a number of advantages. The most important advantage is that creating and rolling back snapshots happens almost instantaneously as compared to hours or longer for traditional backup and restore. It is this ability to quickly take an entire server back in time that makes snapshots ideal for reducing the risk of performing CentOS conversions.
 
 ### Step 2 - Assessing Different Snapshot Solutions
 
@@ -60,13 +60,13 @@ The following sections explain the pros and cons in detail.
 
 #### LVM
 
-The Logical Volume Manager (LVM) is a set of tools included in RHEL that provide a way to create and manage virtual block devices known as logical volumes. LVM logical volumes are typically used as the block devices from which RHEL OS filesystems are mounted. The LVM tools support creating and rolling back logical volume snapshots. Automating these actions from an Ansible playbook is relatively simple.
+The Logical Volume Manager (LVM) is a set of tools included in CentOS that provide a way to create and manage virtual block devices known as logical volumes. LVM logical volumes are typically used as the block devices from which CentOS filesystems are mounted. The LVM tools support creating and rolling back logical volume snapshots. Automating these actions from an Ansible playbook is relatively simple.
 
 > **Note**
 >
 > The snapshot and rollback automation capability implemented for our workshop lab environment creates LVM snapshots managed using Ansible roles from the [`infra.lvm_snapshots`](https://github.com/swapdisk/infra.lvm_snapshots#readme) collection.
 
-Logical volumes are contained in a storage pool known as a volume group. The storage available in a volume group comes from one or more physical volumes, that is, block devices underlying actual disks or disk partitions. Typically, the logical volumes where the RHEL OS is installed will be in a "rootvg" volume group. If best practices are followed, applications and app data will be isolated in their own logicial volumes either in the same volume group or a separate volume group, "appvg" for example.
+Logical volumes are contained in a storage pool known as a volume group. The storage available in a volume group comes from one or more physical volumes, that is, block devices underlying actual disks or disk partitions. Typically, the logical volumes where the CentOS OS is installed will be in a "rootvg" volume group. If best practices are followed, applications and app data will be isolated in their own logicial volumes either in the same volume group or a separate volume group, "appvg" for example.
 
 To create logical volume snapshots, there must be free space in the volume group. That is, the total size of the logical volumes in the volume group must be less than the total size of the volume group. The `vgs` command can be used query volume group free space. For example:
 
@@ -76,7 +76,7 @@ To create logical volume snapshots, there must be free space in the volume group
   VolGroup00   1   7   0 wz--n- 29.53g 9.53g
 ```
 
-In the example above, the `VolGroup00` volume group total size is 29.53 GiB and there is 9.53 GiB of free space in the volume group. This should be enough free space to support rolling back a RHEL upgrade.
+In the example above, the `VolGroup00` volume group total size is 29.53 GiB and there is 9.53 GiB of free space in the volume group. This should be enough free space to support rolling back a CentOS conversion.
 
 If there is not enough free space in the volume group, there are a few ways we can make space available:
 
@@ -90,7 +90,7 @@ Unless you have the luxury of creating snapshots with the same size as their ori
 
 #### VMware
 
-A VMware snapshot preserves the state and data of a VM at a specific point in time. Because VMware snapshots operate at the hypervisor level, they are completely independent of the guest OS. This makes them foolproof to anything that can go wrong during a RHEL upgrade. Even if an upgrade fails so badly that the OS can't even be booted up again, reverting the VMware snapshot will still save the day. For these reasons, VMware snapshots appear to be a very compelling snapshot option.
+A VMware snapshot preserves the state and data of a VM at a specific point in time. Because VMware snapshots operate at the hypervisor level, they are completely independent of the guest OS. This makes them foolproof to anything that can go wrong during a CentOS conversion. Even if a conversion fails so badly that the OS can't even be booted up again, reverting the VMware snapshot will still save the day. For these reasons, VMware snapshots appear to be a very compelling snapshot option.
 
 VMware snapshots can be manually created and reverted using the vSphere management UI. To create or revert a VMware snapshot automatically from an Ansible playbook, access permissions to the required vSphere API calls must be authorized for the AAP control node.
 
@@ -98,7 +98,7 @@ In our experience, having this access granted can be extremely challenging. The 
 
 The VMware team may resist supporting snapshots because of limited storage space. While standard VMDK files are fixed in size, COW snapshots will grow over time and require careful monitoring with data stores in VMware environments often running tight on capacity.
 
-Another justification for pushing back on supporting automated snapshots will be the VMware vendor recommendation that snapshots should never be used for more than 72 hours (see KB article [Best practices for using VMware snapshots in the vSphere environment](https://kb.vmware.com/s/article/1025279)). Unfortunately, app teams usually need more than 3 days of soak time before they are comfortable that no impact to their apps has resulted from a RHEL upgrade.
+Another justification for pushing back on supporting automated snapshots will be the VMware vendor recommendation that snapshots should never be used for more than 72 hours (see KB article [Best practices for using VMware snapshots in the vSphere environment](https://kb.vmware.com/s/article/1025279)). Unfortunately, app teams usually need more than 3 days of soak time before they are comfortable that no impact to their apps has resulted from a CentOS conversion.
 
 VMware snapshots work great when they can be automated. If you are considering this option, engage early with the team that controls the VMware environment for your organization and be prepared for potential resistance.
 
@@ -114,32 +114,32 @@ Automating EBS snapshot creation and rollback is fairly straightforward assuming
 
 This method is an alternative to LVM that can be used with bare metal servers where the root disk is on a hardware RAID mirror set. Technically speaking, it is not a snapshot, but it still provides a near instantaneous rollback capability.
 
-Instead of creating a snapshot just before starting the upgrade, the automation reconfigures the RAID controller to break the mirror set of the root disk so then it's just two JBOD disks. One of the JBOD disks is used going forward with the upgrade while the other is left untouched. To perform a rollback, the mirror set is reconstructed from the untouched JBOD.
+Instead of creating a snapshot just before starting the conversion, the automation reconfigures the RAID controller to break the mirror set of the root disk so then it's just two JBOD disks. One of the JBOD disks is used going forward with the conversion while the other is left untouched. To perform a rollback, the mirror set is reconstructed from the untouched JBOD.
 
 Most bare metal servers support out-of-band management and those manufactured in the last decade will support APIs based on the [Redfish](https://www.dmtf.org/standards/redfish) standard. These APIs can be used by automation to break and reconstruct the mirror set, but be prepared for a significant development and testing effort because the API implementations are not always the same across different vendors and server models.
 
 #### ReaR
 
-ReaR (Relax and Recover) is a backup and recovery tool that is included with RHEL. ReaR doesn't use snapshots, but it does make it very easy to perform a full backup and restore of your RHEL server. When taking a full backup, ReaR creates a bootable ISO image with the current state of the server. To use a ReaR backup to revert an in-place upgrade, we simply boot the server from the ISO image and then choose the "Automatic Recover" option from the menu.
+ReaR (Relax and Recover) is a backup and recovery tool that is available to utilize with CentOS. ReaR doesn't use snapshots, but it does make it very easy to perform a full backup and restore of your CentOS server. When taking a full backup, ReaR creates a bootable ISO image with the current state of the server. To use a ReaR backup to revert a CentOS conversion, we simply boot the server from the ISO image and then choose the "Automatic Recover" option from the menu.
 
 While ReaR backup and recovery is not instantaneous like rolling back a snapshot, it is remarkably fast compared to recovery tools that require you to perform a fresh OS install and then manually recover at a file level.
 
-Read the article [ReaR: Backup and recover your Linux server with confidence](https://www.redhat.com/sysadmin/rear-backup-and-recover) to learn more.
+Refer to the [Relax-and-Recover (ReaR) User Guide Documentation](https://relax-and-recover.org/rear-user-guide/) to learn more.
 
 ### Step 3 - Snapshot Scope
 
-The best practice for allocating the local storage of a RHEL servers is to configure volumes that separate the OS from the apps and app data. For example, the OS filesystems would be under a "rootvg" volume group while the apps and app data would be in an "appvg" volume group or at least in their own dedicated logical volumes. This separation helps isolate the storage usage requirements of these two groups so they can be manged based on their individual requirements and are less likely to impact each other. For example, the backup profile for the OS is likely different than for the apps and app data.
+A best practice for allocating the local storage of servers is to configure volumes that separate the OS from the apps and app data. For example, the OS filesystems would be under a "rootvg" volume group while the apps and app data would be in an "appvg" volume group or at least in their own dedicated logical volumes. This separation helps isolate the storage usage requirements of these two groups so they can be manged based on their individual requirements and are less likely to impact each other. For example, the backup profile for the OS is likely different than for the apps and app data.
 
-This practice helps to enforce a key tenet of the RHEL in-place upgrade approach: that is that the OS upgrade should leave the applications untouched with the expectation that system library forward compatibility and middleware runtime abstraction reduces the risk of the RHEL upgrade impacting app functionality.
+This practice helps to enforce a key tenet of the CentOS conversion approach: that is that the OS conversion should leave the applications untouched with the expectation that system library forward compatibility and middleware runtime abstraction reduces the risk of the CentOS to RHEL conversion impacting app functionality.
 
-With these concepts in mind, let's consider if we want to include the apps and app data in what gets rolled back if we need to revert the RHEL upgrade:
+With these concepts in mind, let's consider if we want to include the apps and app data in what gets rolled back if we need to revert the CentOS conversion:
 
 | Snapshot scope | Benefits | Drawbacks |
 | -------------- | -------- | --------- |
 | OS only |<ul><li>Simplifies storage requirements</li><li>Preserves isolation of OS changes from apps and app data</li><li>Reduces risk of rolling back impacting external apps</li></ul>|<ul><li>Probably not possible with VMware snapshots</li><li>Discipline required to avoid temptation of trying quick app changes to fix impacts</li></ul>|
 | OS and apps/data |<ul><li>Reduces risk if trying to fix app impact during maintenance window</li><li>Helpful if app impact could lead to app data corruption</li></ul>|<ul><li>More storage space required</li><li>Rolling back app data could impact external systems</li></ul>|
 
-When snapshots only include the upgraded OS volumes, the best practice of isolating OS changes from app changes is followed. In this case, it is important to resist the temptation to make some heroic app changes in an attempt to avoid rolling back in the face of application impact after a RHEL upgrade. For the sake of safety and soundness, gather the evidence required to help understand what caused any app impact, but then do a rollback. Don't make any app changes that could be difficult to untangle after rolling back the OS.
+When snapshots only include the converted OS volumes, the best practice of isolating OS changes from app changes is followed. In this case, it is important to resist the temptation to make some heroic app changes in an attempt to avoid rolling back in the face of application impact after a CentOS conversion. For the sake of safety and soundness, gather the evidence required to help understand what caused any app impact, but then do a rollback. Don't make any app changes that could be difficult to untangle after rolling back the OS.
 
 Unfortunately, a VMware snapshot saves the full state of a VM instance including all virtual disks irrespective of whether they contain OS or app data. This can prove challenging for a couple reasons. First, more storage space will be required for the snapshots and it is more difficult to anticipate how much snapshot growth will result because of app data activity. The other problem is that rolling back app data may result in the app state becoming out of sync with external systems leading to unpredictable issues. When rolling back app data for any reason, be aware of the potential headaches that may result.
 
@@ -155,18 +155,18 @@ There are a number of factors you should consider when deciding which method of 
 
 Consider a belt and suspenders approach, that is, offer support for more than one method. Maybe it makes sense to recommend one method for bare metal and another for VMs.
 
-Whatever your decision, remember that an effective snapshot/rollback capability integrated with your end-to-end automation is the most important feature of any RHEL in-place upgrade solution.
+Whatever your decision, remember that an effective snapshot/rollback capability integrated with your end-to-end automation is the most important feature of any CentOS conversion solution.
 
 ## Conclusion
 
 In this exercise, we learned about the pros and cons of a number of different methods of achieving an automated snapshot/rollback capability. We also considered the risks that can happen because of rolling back app data that isn't isolated from OS changes. With this knowledge, you are ready to make more informed decisions when designing your snapshot/rollback automation approach.
 
-In the next exercise, we'll go back to look at how the RHEL in-place upgrades are progressing on our pet application servers.
+In the next exercise, we'll go back to look at how the CentOS conversions are progressing on our three tier application servers.
 
 ---
 
 **Navigation**
 
-[Previous Exercise](../2.1-upgrade/README.md) - [Next Exercise](../2.3-check-upg/README.md)
+[Previous Exercise](../2.1-convert/README.md) - [Next Exercise](../2.3-check-convert/README.md)
 
 [Home](../README.md)
