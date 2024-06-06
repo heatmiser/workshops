@@ -71,7 +71,7 @@ This use-case will focus on conversion from CentOS (though this could be another
 
   ![Controller inventories](images/update_controller_inventory_01.png)
 
-- On the left menu bar, select "Inventories" and then click on "EC2 Dynamic Inventory".
+- On the left menu bar, navigate to Resources > Inventories by clicking on "Inventories" under the "Resources" group in the navigation menu, then click on "EC2 Dynamic Inventory".
 
   ![Controller inventories details](images/update_controller_inventory_02.png)
 
@@ -133,11 +133,9 @@ This use-case will focus on conversion from CentOS (though this could be another
 
 ### Step 3 - Install Three Tier Application
 
-- Return to the AAP Web UI browser tab you opened in step 3 of the previous exercise. Navigate to Resources > Templates by clicking on "Templates" under the "Resources" group in the navigation menu. This will bring up a list of job templates that can be used to run playbook jobs on target hosts:
+- In the AAP Web UI, navigate to Resources > Templates by clicking on "Templates" under the "Resources" group in the navigation menu. This will bring up a list of job templates that can be used to run playbook jobs on target hosts:
 
   ![Job templates listed on AAP Web UI](images/aap_templates.png)
-
-- Use the side pane menu on the left to select **Templates**.
 
 - Click ![launch](images/convert2rhel-aap2-launch.png) to the right of **CONVERT2RHEL / 98 - Three Tier App deployment** to launch the job.  This will take ~2 minutes to complete.
 
