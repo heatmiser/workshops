@@ -52,7 +52,10 @@ After the analysis phase is done and the report indicates acceptable risk, a mai
 
 #### Commit
 
-If there are any application impacts discovered that can't be easily corrected within the scheduled maintenance window, the decision can be made to undo the conversion by rolling back the snapshot. This will revert all changes and return the host back to the previous CentOS version. If there are no issues immediately found, the commit phase begins. During the commit phase, the host can be returned to normal operation while keeping the snapshot just in case any issues are uncovered later. <!-- This is LVM specific: However, while the snapshots are kept, regular disk writes to the rootvg volume group will continue to consume the free space allocated to the snapshots. The amount of time this takes will depend on the amount of free space initially available and the volume of write i/o activity to the rootvg volume group. Before the snapshot space is exhausted, the snapshots must be deleted and then there is no turning back. --> After everyone is comfortable with the converted host, the commit playbook should be executed to delete the snapshot. The CentOS conversion to RHEL is complete.
+If there are any application impacts discovered that can't be easily corrected within the scheduled maintenance window, the decision can be made to undo the conversion by rolling back the snapshot. This will revert all changes and return the host back to the previous CentOS version. However, if there are no issues found, the commit phase begins. During the commit phase, the host can be returned to normal operation while keeping the snapshot just in case any issues are uncovered later.
+> **&#9432;** This is LVM specific: However, while the snapshots are kept, regular disk writes to the rootvg volume group will continue to consume the free space allocated to the snapshots. The amount of time this takes will depend on the amount of free space initially available and the volume of write i/o activity to the rootvg volume group. Before the snapshot space is exhausted, the snapshots must be deleted and then there is no turning back.
+
+Once comfortable with the converted host, the commit playbook should be executed to delete the snapshot. The CentOS conversion to RHEL is complete.
 
 #### Let's Get Started
 
@@ -173,7 +176,7 @@ Can you find the upstream source repo and playbook code?
 ```
 By checking the `collections/requirements.yml` file in the `redhat-partner-tech/automated-satellite` git repo, we can discover that this role comes from another git repo at [https://github.com/heatmiser/infra.convert2rhel](https://github.com/heatmiser/infra.convert2rhel). It is the `analysis` role under this second git repo that provides all the automation tasks that ultimately runs the Convert2RHEL analysis scan and generates the report. *NOTE* We are utilizing a fork of the upstream infra.convert2rhel Ansible collection [https://github.com/redhat-cop/infra.convert2rhel](https://github.com/redhat-cop/infra.convert2rhel). Because the upstream collections is a fast moving project, we utilize a fork where we can closely manage the state of the code base to ensure optimal stability for the lab/workshop/demo environment.
 
-- In the [https://github.com/heatmiser/infra.convert2rhel](https://github.com/heatmiser/infra.convert2rhel) project, drill down to the `roles/analysis` directory in this git repo to review the README and yaml source files.
+- In a new browser tab/instance, open the [https://github.com/heatmiser/infra.convert2rhel](https://github.com/heatmiser/infra.convert2rhel) URL. Drill down to the `roles/analysis` directory in this git repo to review the README and yaml source files.
 
 When you are ready to develop your own custom playbooks to run conversions for your enterprise, you should consider using roles from the `infra.convert2rhel` Ansible collection to make your job easier.
 
