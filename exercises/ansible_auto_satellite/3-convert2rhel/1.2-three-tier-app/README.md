@@ -143,7 +143,31 @@ This use-case will focus on conversion from CentOS (though this could be another
 
 ### Step 4 - Smoke Test Three Tier Application
 
-Now that our three tier application is installed, we will look at how we can automate the testing of the application stack functionality.
+Now that our three tier application is installed, let's cover the application stack layout.
+
+| Host              |  Component | Port  |
+| ------------------|------------|-------|
+| node4.example.com | HAProxy    | 80    |
+| node5.example.com | Tomcat     | 8080  |
+| node6.example.com | PostgreSQL | 5432  |
+
+node4.example.com proxies incoming requests on port 80 and forwards them to port 8080 on node5.example.com, where Tomcat is running a simple java application that, upon an incoming request to the servlet, creates a table in the PostgreSQL database on node6.example.com, with the table name being constructed from the date and time of the request. For example:
+
+`Table "06-06-2024-18-00" has been created!`
+
+If you'd like to manually test the application stack, you can run the following commands from the `ansible-1` Visual Studio Code terminal:
+
+```curl http://node4.example.com```
+
+Remember, node4.example.com is a proxy, so the above command displays the default page on node5.example.com
+
+```curl http://node4.example.com/3ta/connectordbbservlet?```
+
+The above will make a request to the Tomcat servlet, where the database table described earlier will be created on the PostgreSQL database on node6.example.com. Without writing out a complete PostgreSQL command cheat sheet, if desired, you can follow the following example command line trail (commands outlined in red rectangles) and check out the PostgreSQL system yourself:
+
+![3tier-db-check](images/convert2rhel-3tier-db-check.png)
+
+- Now that we understand the application stack layout, rather than having to use the command line and checking all of the various components manually, let's look at how we can test application stack functionality...via automation!
 
   ![Job templates listed on AAP Web UI 2](images/aap_templates_2.png)
 
@@ -152,6 +176,8 @@ Now that our three tier application is installed, we will look at how we can aut
 - Click ![launch](images/convert2rhel-aap2-launch.png) to the right of **CONVERT2RHEL / 99 - Three Tier App smoke test** to launch the application test job.  This should take ~15 seconds to complete.
 
   ![3tier-smoke-test-output](images/convert2rhel-3tier-smoke-output.png)
+
+- The Ansible playbook utilized by this job template makes a request to the Tomcat servlet via the HAproxy node and records the name of the database table that is presented. The database is then connected to and verifies that in fact a table with the recorded name is present in the database. By utilizing current time and date stamps, we are demonstrating that we are truly working with live systems in real time.
 
 - If the job template completes successfully, then we have verified that our three tier application stack is functioning correctly. If it fails, we know that something with the application stack is malfunctioning and we can begin the debugging process to determine where the problem resides.
 
