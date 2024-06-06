@@ -11,7 +11,7 @@
     - [Step 2 - Open a Terminal Session](#step-2---open-a-terminal-session)
     - [Step 3 - Access the AAP Web UI](#step-3---access-the-aap-web-ui)
     - [Step 4 - Access the Satellite Web UI](#step-4---access-the-satellite-web-ui)
-    - [Step 5 - Access the CentOS Web Console](#step-5---access-the-centos-web-console)
+    - [Step 5 - Access the RHEL Web Console](#step-5---access-the-centos-web-console)
     - [Step 6 - Challenge Labs](#step-6---challenge-labs)
   - [Conclusion](#conclusion)
 
@@ -42,7 +42,7 @@ The workshop is provisioned with a pre-configured lab environment. You will have
 
 We will use Visual Studio Code (VS Code) as it provides a convenient and intuitive way to use a web browser to edit files and access terminal sessions. If you are a command line hero, direct SSH access is available if VS Code is not to your liking. There is a short YouTube video to explain if you need additional clarity: <a href="https://youtu.be/Y_Gx4ZBfcuk">Ansible Workshops - Accessing your workbench environment</a>.
 
-- You can open VS Code in your web browser using the "WebUI" link under "VS Code access" on the workshop landing page. The password is provided below the link. For example:
+- You can open VS Code in your web browser using the "Console URL" link under "Visual Studio Code" on the workshop landing page. The password is provided below the link. For example:
 
   ![Example link to VS Code WebUI](images/vscode_link.png)
 
@@ -72,7 +72,7 @@ Terminal sessions provide access to the OS commands and utilities that will help
 
 The AAP Web UI is where we will go to submit and check the status of the Ansible playbook jobs we will use to automate the CentOS conversion workflow.
 
-- Let's open the AAP Web UI in a new web browser tab using the "WebUI" link under "Automation controller" on the workshop launch page. For example:
+- Let's open the AAP Web UI in a new web browser tab using the "Console" link under "Red Hat Ansible Automation Controller" on the workshop launch page. For example:
 
   ![Example link to AAP Web UI](images/aap_link.png)
 
@@ -94,19 +94,19 @@ The Satellite Web UI is where we will go to review the Lifecycle Environments, C
 
   ![Example Satellite Web UI dashboard](images/aap_console_example.svg)
 
-### Step 5 - Access the CentOS Web Console
+### Step 5 - Access the RHEL Web Console
 
-We will use the CentOS Web Console to review the results of the Leapp pre-upgrade reports we generate for our pet app servers.
+We will use the RHEL Web Console to review the results of the Convert2RHEL pre-conversion analysis reports we generate for our three-tier app servers.
 
-- Open a new web browser tab using the link under "CentOS Web Console" on the workshop launch page. For example:
+- Open a new web browser tab using the link under "RHEL Web Console" on the workshop launch page. For example:
 
-  ![Example link to CentOS Web Console](images/cockpit_link.png)
+  ![Example link to RHEL Web Console](images/cockpit_link.png)
 
-- Enter the username `student` and the password provided. This will bring you to a CentOS Web Console Overview page like the example below:
+- Enter the username `student` and the password provided. This will bring you to a RHEL Web Console Overview page like the example below:
 
-  ![Example CentOS Web Console](images/cockpit_example.svg)
+  ![Example RHEL Web Console](images/cockpit_example.png)
 
-- We will revisit the CentOS Web Console when we are ready to review our pre-upgrade reports in an upcoming exercise.
+- We will revisit the RHEL Web Console when we are ready to review our pre-conversion reports in an upcoming exercise.
 
 ### Step 6 - Challenge Labs
 
@@ -114,7 +114,7 @@ You will soon discover that many exercises in the workshop come with a "Challeng
 
 ## Conclusion
 
-In this exercise, we learned about the lab environment we will be using to continue through the workshop exercises. We verified that we are able to use VS Code in our web browser and from there we can open terminal sessions. We verified access to the AAP Web UI which will be the "self-service portal" we use to perform the next steps of the CentOS conversion automation workflow. We also made sure we are able to access the Satellite Web UI where we can review the repositories providing the packages for the CentOS conversion automation workflow, as well as the status of the hosts theselves. Finally, we connected to the CentOS Web Console where we will soon be reviewing pre-conversion analysis reports.
+In this exercise, we learned about the lab environment we will be using to continue through the workshop exercises. We verified that we are able to use VS Code in our web browser and from there we can open terminal sessions. We verified access to the AAP Web UI which will be the "self-service portal" we use to perform the next steps of the CentOS conversion automation workflow. We also made sure we are able to access the Satellite Web UI where we can review the repositories providing the packages for the CentOS conversion automation workflow, as well as the status of the hosts theselves. Finally, we connected to the RHEL Web Console where we will soon be reviewing pre-conversion analysis reports.
 
 Use the link below to move on the the next exercise.
 
