@@ -31,7 +31,7 @@ Red Hat provides the Convert2RHEL utility, a tool to convert RHEL-like systems t
 
 Our CentOS conversion automation approach follows a workflow with three phases:
 
-![Three phase workflow: Analysis, Convert, Commit](images/ripu-workflow.svg)
+![Three phase workflow: Analysis, Convert, Commit](images/conversion-workflow.svg)
 
 > **Note**
 >
@@ -95,7 +95,7 @@ One of the prerequisites for successful Convert2RHEL OS conversions is that the 
 
 As we progress through the workshop, we'll refer back to this diagram to track where we are in our automation approach workflow. We are starting now in the highlighted block below:
 
-![Automation approach workflow diagram with analysis step highlighted](images/ripu-workflow-hl-analysis.svg)
+![Automation approach workflow diagram with analysis step highlighted](images/conversion-workflow-hl-analysis.svg)
 
 The first step in converting our three tier app hosts will be executing the analysis playbook to generate the Convert2RHEL pre-conversion report for each host. To do this, we will use the Ansible Automation Platform (AAP) automation controller host that has been pre-configured in your workshop lab environment.
 
