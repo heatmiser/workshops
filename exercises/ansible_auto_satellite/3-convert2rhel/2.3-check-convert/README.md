@@ -13,13 +13,13 @@
 ## Objectives
 
 * Review the conversion playbook job log
-* Verify our pet application servers are running the newer RHEL version
+* Verify our three tier application servers are running the new RHEL version
 
 ## Guide
 
 In the previous exercises, we reviewed pre-conversion analyis reports, as well as reviewing the potential for incorporating remediations. After all of that, you finally launched the Ansible playbook jobs to run the CentOS in-place conversions on your servers.
 
-It's time to verify the results of the conversions and let our application teams assess if their pet apps are still good. We are here in our CentOS in-place conversion automation workflow:
+It's time to verify the results of the conversions and let our application team assess if their three tier application stack is in working order. We are here in our CentOS in-place conversion automation workflow:
 
 ![Automation approach workflow diagram with app validation steps highlighted](images/ripu-workflow-hl-validate.svg)
 
@@ -27,17 +27,17 @@ Let's get started!
 
 ### Step 1 - Review the Conversion Playbook Job Log
 
-The first thing we want to do is see if the job running the upgrade playbooks has finished successfully.
+The first thing we want to do is see if the job running the conversion playbook has finished successfully.
 
-- Return to the AAP Web UI tab in your web browser. Navigate to Views > Jobs and then open the "OS / Upgrade" playbook run entry to see the log output from the conversions.
+- Return to the AAP Web UI tab in your web browser. Navigate to Views > Jobs and then open the "## - OS / Convert to RHEL7" playbook run entry (## will be a number) to see the log output from the conversions.
 
   > **Note**
   >
-  > You will also see an entry for the "AUTO / 02 Upgrade" workflow job. Workflow jobs launch a number of playbook runs. To see the playbook log output, we need to open the playbook run entry, not the workflow job entry.
+  > When looking in the Jobs view, you will also see an entry for the "## - CONVERT2RHEL / 02 Convert" workflow job. Workflow jobs launch a number of playbook runs. To see the conversion playbook log output, we need to open the job entry for the conversion playbook run, not the workflow job entry.
 
   For example:
 
-  ![AAP Web UI listing conversion job entries](images/conversion_jobs.svg)
+  ![AAP Web UI listing conversion job entries](images/conversion_jobs.png)
 
 - If the playbook run finished without any failed tasks, you should see "Successful" displayed with a green checkmark.
 
@@ -47,13 +47,13 @@ The first thing we want to do is see if the job running the upgrade playbooks ha
 
   Scroll down to the end of the log output to see the "PLAY RECAP" indicating the success or failure status for the playbook run executed on each host. Here is what you should expect to see:
 
-  ![AAP Web UI showing successful conversion playbook run play recap](images/conversion_play_recap.svg)
+  ![AAP Web UI showing successful conversion playbook run play recap](images/conversion_play_recap.png)
 
   If there are no failed runs, the CentOS in-place conversion is complete on all of our application servers.
 
 ### Step 2 - Verify the Hosts are Upgraded to Next RHEL Version
 
-Now let's make sure our pet app servers are actually converted to the next RHEL version.
+Now let's make sure our application servers are actually converted to the next RHEL version.
 
 - In [Exercise 1.3: Step 2](../1.3-report/README.md#step-2---navigating-the-rhel-web-console), you used the RHEL Web Console to check the installed CentOS versions on your application servers. Let's repeat those steps to see the RHEL versions reported after our conversions.
 
@@ -63,19 +63,17 @@ Now let's make sure our pet app servers are actually converted to the next RHEL 
   >
   > You may need to refresh the browser using Ctrl-R to see the newly reported RHEL version.
 
-  For example, this pet app server that previously had CentOS 7 is now reporting RHEL 7:
+  For example, the node4 application server that previously had CentOS 7.9 is now reporting RHEL 7.9:
 
-  ![fluent-bee running Red Hat Enterprise Linux 9.2 (Plow)](images/rhel9_converted.svg)
+  ![node4 running Red Hat Enterprise Linux 7.9 (Plow)](images/rhel7_converted.png)
 
-  Here is an example one that was previously RHEL7 now running RHEL8:
-
-  ![vocal-hyena running Red Hat Enterprise Linux Server 8.8 (Oopta)](images/rhel8_converted.svg)
+- Additionally, if you recorded the `Asset Tag` and `Machine ID`, note that they are the same, serving as verification that this is indeed the same system that was previously operating with CentOS 7.
 
 - You can also check the RHEL and kernel versions from the command line following the steps you used with [Exercise 1.1: Step 2](../1.1-setup/README.md#step-2---open-a-terminal-session).
 
-  At the shell prompt of your pet app servers, use the `cat /etc/redhat-release` and `uname -r` commands. Here's an example showing an application server that was converted to RHEL 7:
+  At the shell prompt of your application servers, use the `cat /etc/redhat-release` and `uname -r` commands. Here's an example showing that application server `node4` was converted to RHEL 7:
 
-  ![command output showing RHEL7 is installed](images/rhel9_commands.svg)
+  ![command output showing RHEL7 is installed](images/rhel7_commands.png)
 
 ## Conclusion
 
@@ -94,6 +92,6 @@ Otherwise, you may skip ahead to the next section of the workshop where we will 
 
 **Navigation**
 
-[Previous Exercise](../2.1-upgrade/README.md) - [Next Exercise](../2.4-check-three-tier-app/README.md)
+[Previous Exercise](../2.2-snapshots/README.md) - [Next Exercise](../2.4-check-three-tier-app/README.md)
 
 [Home](../README.md)
